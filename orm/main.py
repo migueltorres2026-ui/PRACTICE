@@ -32,9 +32,9 @@ def pedir_id():
     return id_hotel
 
 def pedir_datos_hotel():
-    llave = input("llave: ").strip()
+    llave = pedir_entero("llave: ")
     dueno = input("dueno: ").strip()
-    habitacion = input("habitacion: ").strip()
+    habitacion = pedir_entero("habitacion: ")
     return llave, dueno, habitacion
 
 def mostrar_hotel(hotel):
@@ -62,12 +62,12 @@ def main():
                 llave, dueno, habitacion = pedir_datos_hotel()
                 hotel = registro_llave(llave, dueno, habitacion)
                 print("nuevo hotel")
-                return hotel
+                mostrar_hotel(hotel)
 
             if opcion == "2":
                 print("=== CONSULTA ===")
                 hoteles = consultar_hotel()
-                if not hotel:
+                if not hoteles:
                     print("no hay consulta")
                 else:
                     for hotel in hoteles:
@@ -83,10 +83,15 @@ def main():
                     mostrar_hotel(hotel)
 
             if opcion == "4":
-                print("=== actualizar ===")
-                mostrar_hotel(hotel)
-                print("\nIngrese nuevos valores: ")
-                llave, dueno, habitacion = pedir_datos_hotel()
+                id_hotel = pedir_id()
+                hotel = buscar_hotel(id_hotel)
+
+                if hotel is None:
+                    print("no encontrado")
+                else:
+                    mostrar_hotel(hotel)
+                    llave, dueno, habitacion = pedir_datos_hotel()
+                
                 actualizado = actualizar_hotel(
                     id_hotel, llave, dueno, habitacion
                 )

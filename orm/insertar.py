@@ -7,12 +7,12 @@ def registro_llave(llave, dueno, habitacion):
 
     if not dueno or len(dueno) <= 0:
         raise ValueError("debe haber un dueño")
-    if type(llave) is not int or llave < 0:
+    if type(llave) is not int or llave <= 0:
         raise ValueError("debe ser mayor a cero")
-    if type(habitacion) is not int or habitacion < 0:
+    if type(habitacion) is not int or habitacion > 100:
         raise ValueError("debe ser mayor a cero")
 
-    with Session as session:
+    with Session.begin() as session:
         hotel = Hotel(
             dueno=dueno,
             llave=llave,

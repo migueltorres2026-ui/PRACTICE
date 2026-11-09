@@ -16,6 +16,6 @@ def buscar_hotel(id_hotel):
         raise ValueError("debe ser mayor a cero")
 
     with Session() as session:
-        hotel = session.get(hotel, id_hotel)
+        hotel = session.get(Hotel, id_hotel)
 
     return hotel

@@ -6,13 +6,13 @@ def actualizar_hotel(id_hotel, llave, dueno, habitacion):
     if type(id_hotel) is not int or id_hotel <= 0:
         raise ValueError("mayor a cero")
 
-    dueno = dueno.sprip()
+    dueno = dueno.strip()
 
-    if not dueno or len(dueno) <= 0:
+    if not dueno or len(dueno) > 100:
         raise ValueError("debe haber un dueño")
-    if type(llave) is not int or llave < 0:
+    if type(llave) is not int or llave <= 0:
         raise ValueError("debe ser mayor a cero")
-    if type(habitacion) is not int or habitacion < 0:
+    if type(habitacion) is not int or habitacion <= 0:
         raise ValueError("debe ser mayor a cero")
 
 
