@@ -7,129 +7,136 @@ from actualizar import actualizar_libro
 from delete import iliminar_libros
 from prestamo import prestar_libro
 
+
 def mostrar_menu():
-    print("\n===== SISTEMA DE BIBLIOTECA =====")
-    print("1. registrar libro")
-    print("2. consultar libro")
-    print("3. buscar libro por ID")
-    print("4. Actualizar")
-    print("5 eliminar libro")
-    print("6. prestar libro")
-    print("0. salir")
+    print("\n========== SISTEMA DE BIBLIOTECA ==========")
+    print("1. Registrar libro")
+    print("2. Consultar libros")
+    print("3. Buscar libro por ID")
+    print("4. Actualizar libro")
+    print("5. Eliminar libro")
+    print("6. Prestar libro")
+    print("0. Salir")
+
 
 def pedir_entero(mensaje):
     try:
         numero = int(input(mensaje))
     except ValueError:
-        raise ValueError("el ID debe ser mayor a cero") from None
+        raise ValueError("Debes ingresar un número entero.") from None
     return numero
 
+
 def pedir_id():
-    id_libro = pedir_entero("Ingrese ID del Libro: ")
+    id_libro = pedir_entero("Ingrese el ID del libro: ")
     if id_libro <= 0:
-        raise ValueError("el id es invalido")
+        raise ValueError("El ID debe ser mayor que cero.")
     return id_libro
 
+
 def pedir_datos_libro():
-    titulo = input("Titulo: ").strip()
-    autor = input("Autor").strip()
-    ano = input("Año de publicacion: ").strip()
-    disponible = input("Ejemplares disponibles: ").strip()
+    titulo = input("Título: ").strip()
+    autor = input("Autor: ").strip()
+    ano = pedir_entero("Año de publicación: ")
+    disponible = pedir_entero("Ejemplares disponibles: ")
     return titulo, autor, ano, disponible
 
 
 def mostrar_libro(libro):
-    print("\n-----------------------------------------")
+    print("\n----------------------------------------")
     print("ID:", libro.id)
-    print("Titulo:", libro.titulo)
-    print("autor:", libro.autor)
-    print("ano:", libro.ano)
-    print("disponible:", libro.disponible)
-    print("-------------------------------------------")
+    print("Título:", libro.titulo)
+    print("Autor:", libro.autor)
+    print("Año:", libro.ano)
+    print("Disponibles:", libro.disponible)
+    print("----------------------------------------")
+
 
 def main():
     try:
         crear_tabla()
     except SQLAlchemyError as error:
-        print("no se pudo la base de datos", error)
+        print("No se pudo preparar la base de datos:", error)
         return
 
     while True:
         mostrar_menu()
-        opcion = input("seleccione una opcion: ").strip()
+        opcion = input("Seleccione una opción: ").strip()
 
         try:
             if opcion == "1":
-                print("=== REGISTRO LIBRO ===")
-                titulo, autor, ano, disponible = pedir_datos_libro()
-                libro = registrar_libro(titulo, autor, ano, disponible)
-                print("libros registrados")
+                print("\n=== REGISTRAR LIBRO ===")
+                titulo, autor, ano, disponibles = pedir_datos_libro()
+                libro = registrar_libro(titulo, autor, ano, disponibles)
+                print("Libro registrado correctamente.")
                 mostrar_libro(libro)
-            
+
             elif opcion == "2":
-                print("=== LISTADO LIBRO ===")
+                print("\n=== LISTADO DE LIBROS ===")
                 libros = consultar_libro()
                 if not libros:
-                    print("no hay registro")
+                    print("No hay libros registrados.")
                 else:
                     for libro in libros:
                         mostrar_libro(libro)
 
             elif opcion == "3":
-                print("=== LIBROS ID ===")
+                print("\n=== BUSCAR LIBRO ===")
                 id_libro = pedir_id()
                 libro = buscar_libro(id_libro)
                 if libro is None:
-                    print("no hay registro")
+                    print("Libro no encontrado.")
                 else:
-                    buscar_libro(libro)
+                    mostrar_libro(libro)
 
             elif opcion == "4":
-                print("=== ACTUALIZAR ==")
+                print("\n=== ACTUALIZAR LIBRO ===")
                 id_libro = pedir_id()
                 libro = buscar_libro(id_libro)
-                if libro in None:
-                    print("libro no encontrado")
+                if libro is None:
+                    print("Libro no encontrado.")
                 else:
-                    print("Datos Actuales:")
+                    print("Datos actuales:")
                     mostrar_libro(libro)
                     print("\nIngrese los nuevos datos:")
-                    titulo, autor, ano, disponible = pedir_datos_libro()
+                    titulo, autor, anio, disponibles = pedir_datos_libro()
                     actualizado = actualizar_libro(
-                        id_libro, titulo, autor, ano, disponible
+                        id_libro, titulo, autor, anio, disponibles
                     )
                     if actualizado:
-                        print("libro actualizado")
+                        print("Libro actualizado correctamente.")
                     else:
-                        print("libro no encontrado")
+                        print("Libro no encontrado.")
 
             elif opcion == "5":
                 print("\n=== ELIMINAR LIBRO ===")
                 id_libro = pedir_id()
                 eliminado = iliminar_libros(id_libro)
                 if eliminado:
-                    print("eliminado")
+                    print("Libro eliminado correctamente.")
                 else:
-                    print("libro no encontrado")
+                    print("Libro no encontrado.")
 
             elif opcion == "6":
-                print("=== prestar libro ===")
+                print("\n=== PRESTAR LIBRO ===")
                 id_libro = pedir_id()
                 libro = prestar_libro(id_libro)
-                print("prestamo realizado")
-                print("libro:", libro.titulo)
-                print("Ejemplares", libro.disponible)
+                print("Préstamo realizado correctamente.")
+                print("Libro:", libro.titulo)
+                print("Ejemplares disponibles:", libro.disponible)
 
             elif opcion == "0":
-                print("chao")
+                print("Hasta luego.")
                 break
 
             else:
-                print("opcion invalida")
-        except ValueError as error:
-            print("no se pudo completar operacion:", error)
-        except SQLAlchemyError as error:
-            print("error de base de datos.", error)
+                print("Opción inválida. Seleccione una opción del menú.")
 
-if __name__ == '__main__':
+        except ValueError as error:
+            print("No se pudo completar la operación:", error)
+        except SQLAlchemyError as error:
+            print("Error de base de datos:", error)
+
+
+if __name__ == "__main__":
     main()
