@@ -1,5 +1,5 @@
-from modelo import Base
 from conexion import engine
+from modelo import Base
 
 
 def crear_tabla():
